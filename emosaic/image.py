@@ -12,7 +12,7 @@ import PIL.Image as pillow
 from sklearn.cluster import KMeans
 
 from emosaic.utils.exif import get_exif_lat_lon
-from emosaic.faces import detect_faces_dlib
+# from emosaic.faces import detect_faces_dlib
 
 
 class Image(object):

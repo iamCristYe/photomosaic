@@ -102,6 +102,8 @@ def index_images(
         if isinstance(paths, str):
             # paths is a glob pattern like: 'images/blah/*.jpg'
             paths = glob.glob(paths)
+            print(f"Found {len(paths)} image files matching the pattern")
+            print(f"First 5 paths: {paths[:5]}")
 
         # should we retrieve a cached index?
         if caching:
@@ -126,7 +128,13 @@ def index_images(
         pool = ThreadPool(nprocesses)
         results = pool.map(load_and_vectorize_image, path_jobs)
         pool.close()
+        # Debug: Count successful vs failed loads
+        success_count = sum(1 for r in results if r[0] is not None and r[1] is not None)
+        print(f"Successfully loaded {success_count}/{len(path_jobs)} images")
 
+        # Debug: Check first few results
+        for i, (image, vector) in enumerate(results[:5]):
+            print(f"Result {i}: image={image is not None}, vector={vector is not None}")
         # how fast did we go?
         elapsed = time.time() - starttime
         if verbose:
@@ -175,7 +183,7 @@ def index_images(
         if caching:
             print("Caching index to disk...")
             cache.save(matrix, images, tile_images)
-
+        print(matrix, images, tile_images)
         return index, images, tile_images
 
     except Exception:

@@ -1,7 +1,7 @@
 import numpy as np
 
 import cv2
-import faiss
+
 
 from emosaic.image import Image
 
@@ -34,29 +34,19 @@ def rotate_bound(image, angle):
 def compute_hw(scale, height_aspect, width_aspect):
   height, width = int(height_aspect * scale), int(width_aspect * scale)
   return height, width
-
 def load_and_vectorize_image(args):
-  """
-  @args: (path, h, w, c, aspect_ratio)
-      path (String) to load image from
-      h (int) height
-      w (int) width
-      c (int) number of channels
-      aspect_ratio (float) that is allowed (height / width)
-      
-  @return: tuple (Image object, numpy arr of vectorized image), but
-      returns (None, None) if the aspect ratio of the image doesn't match 
-      the argument aspect_ratio given
-  """
-  path, h, w, c, aspect_ratio, use_detect_faces = args
-  image = Image(path, detect_faces=use_detect_faces)
-  img = image.compute_statistics()
-  if image.aspect_ratio == aspect_ratio:
-    v = to_vector(img, h, w, c)
-    return image, v
-  else:
-    return None, None
-
+    path, h, w, c, target_aspect_ratio, use_detect_faces = args
+    image = Image(path, detect_faces=use_detect_faces)
+    img = image.compute_statistics()
+    
+    # Add tolerance (e.g., ±2%)
+    aspect_tolerance = 0.02  # 2% tolerance
+    if abs(image.aspect_ratio - target_aspect_ratio) <= aspect_tolerance:
+        v = to_vector(img, h, w, c)
+        return image, v
+    else:
+        print(f"Skipping {path}: aspect {image.aspect_ratio:.3f} != target {target_aspect_ratio:.3f}")
+        return None, None
 def divide_image(img, pixels):
   """
   img: numpy ndarray (3D, where 3rd channel is channel)

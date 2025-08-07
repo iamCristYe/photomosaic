@@ -54,7 +54,7 @@ aspect_ratio = height / float(width)
 
 # get target image
 target_image = cv2.imread(args.target)
-
+print("Target image is %d x %d" % (target_image.shape[1], target_image.shape[0]))
 # index all those images
 tile_index, _, tile_images = index_images(
     paths='%s/*.jpg' % args.codebook_dir,

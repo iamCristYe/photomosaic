@@ -1,0 +1,8 @@
+python mosaic.py \
+    --target "media/example/image_0001.jpg" \
+    --savepath "media/output/%s-mosaic-scale-%d.jpg" \
+    --codebook-dir media/faces/other_faces/ \
+    --scale 13 \
+    --height-aspect 4 \
+    --width-aspect 3 \
+    --opacity 0.4

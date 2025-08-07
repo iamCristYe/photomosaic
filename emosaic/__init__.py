@@ -23,6 +23,7 @@ def mosaicify(
         no_duplicates=True,
     ):
     try:
+        print(tile_index.ntotal)
         rect_starts = divide_image_rectangularly(target_image, h_pixels=tile_h, w_pixels=tile_w)
         mosaic = np.zeros(target_image.shape)
 
@@ -59,6 +60,10 @@ def mosaicify(
                         deviation_from_max = np.abs(distances - distances.max())
                         weighting = deviation_from_max / deviation_from_max.sum()
                         idx = np.random.choice(I[0], p=weighting)
+                # print("idex",idx)
+                # # idx=random.randint(0, 249)
+                # print("idex",idx)
+                # print(tile_images)
                 closest_tile = tile_images[idx]
             except Exception:
                 import ipdb; ipdb.set_trace()
@@ -112,5 +117,5 @@ def mosaicify(
 
     except Exception:
         print(traceback.format_exc())
-        import ipdb; ipdb.set_trace()
+
         return None, None, None
